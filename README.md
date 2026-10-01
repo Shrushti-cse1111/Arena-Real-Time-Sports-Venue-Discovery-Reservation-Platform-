@@ -30,6 +30,70 @@ The platform provides a unified digital experience across **Web (React 19 + Vite
 
 ---
 
+## 🧪 Testing & Evaluation Guide (For Recruiters & Evaluators)
+
+To allow recruiters, hiring managers, and evaluators to quickly and comprehensively test all facets of the application, Arena includes built-in test personas, demo credentials, and a multi-role selector.
+
+### 🔑 Demo Credentials & Test Personas
+
+| Role | Test Username / Email / Mobile | Password / OTP | Key Workflows to Test |
+|---|---|---|---|
+| **🏃 Player / Athlete** | Any 10-digit mobile (e.g. `9876543210`) | OTP: `123456` | Venue discovery, sport filters, 10-minute temporary slot lock, simulated Razorpay checkout, booking pass QR, reviews & ratings. |
+| **🏟️ Venue Owner** | `9876543210` (Apex Sports) or `9812345678` | OTP: `123456` | KYC verification, court creation, peak/off-peak pricing matrix, slot availability controls, revenue analytics & payouts. |
+| **🛡️ Super Admin** | `admin@arena.com` | Password: `Admin@Arena2026!`<br>2FA Code: `849201` *(or universal demo bypass `123456`)* | 2FA verification, venue KYC approval pipeline, platform commission %, user moderation, system-wide GMV analytics. |
+
+---
+
+### 🕹️ Interactive Click-by-Click Evaluation Scenarios
+
+#### Scenario 1: The Player Reservation Journey (Concurrency & Checkout)
+1. Launch the app (`npm run dev`) and select **"Player"** from the Role Selection screen.
+2. Enter your mobile number and submit the demo OTP `123456`.
+3. On the **Home Screen**, browse featured sports (Football, Cricket, Badminton, Tennis).
+4. Tap **Filter** to test amenities (Floodlights, Locker Rooms, Parking) and distance radius.
+5. Select a venue (e.g. *Apex Turf Arena*), choose a date from the horizontal date picker, and pick a time slot.
+6. Observe the **10-Minute Lock Screen** with real-time countdown timer ensuring no double bookings.
+7. Proceed to **Booking Summary**, apply a promo code, and choose **Razorpay Gateway** or **Wallet**.
+8. Complete payment to receive your instant **QR-coded Booking Pass**.
+9. Access **"My Bookings"** to view upcoming/past games and test submitting post-match **Reviews & Ratings**.
+
+#### Scenario 2: The Venue Owner Dashboard & Pricing Engine
+1. Return to the Role Selector and choose **"Venue Owner"**.
+2. Log in using `9876543210` (OTP: `123456`).
+3. **Business Verification (KYC)**: View the submitted business license & GST details.
+4. **Court & Turf Management**: Configure court surfaces (Artificial Grass, Wooden, Synthetic), dimensions, and sport mappings.
+5. **Pricing Configurator**: Adjust weekday vs. weekend multipliers and peak-hour surge rules (6:00 PM – 11:00 PM).
+6. **Slot Availability & Maintenance**: Block out specific slots for maintenance and verify that players immediately see them as unavailable.
+7. **Earnings & Settlements**: Inspect the financial ledger displaying gross revenue, platform commission deductions, and pending payouts.
+
+#### Scenario 3: The Super Admin Control Center & Platform Governance
+1. Choose **"Super Admin"** on the Role Selector.
+2. Enter `admin@arena.com` with password `Admin@Arena2026!`.
+3. Submit the 2FA OTP `849201` on the secure verification screen.
+4. **Venue Approval Queue**: Inspect newly submitted turf applications, view attached KYC documents, and test approving/rejecting with reviewer feedback.
+5. **Commission Settings**: Modify platform commission rates (e.g. 10%) and observe automatic split calculations across future bookings.
+6. **User Moderation & Security Audit Log**: Review audit entries tracking administrative actions, 2FA logins, and session lifecycles.
+
+---
+
+### 🤖 Automated Concurrency & Anti-Double-Booking Tests
+
+Arena includes a dedicated concurrency test harness simulating 10 simultaneous high-speed booking attempts on the exact same court and time slot.
+
+```bash
+# Navigate to the backend directory
+cd server
+
+# Run the automated concurrency & anti-double-booking test
+npm run test -- concurrent-booking.spec.ts
+```
+
+**Expected Result:**
+* ✅ **1 Request**: Successfully acquires the atomic lock and transitions to `HELD` / `CONFIRMED`.
+* ❌ **9 Requests**: Gracefully rejected with `409 Conflict` (`"This slot is currently being held or already reserved by another player."`).
+
+---
+
 ## 🏛️ System Architecture
 
 ```mermaid
@@ -202,7 +266,6 @@ cd server
 npm install
 
 # Configure environment variables
-# Copy .env.example to .env and configure Database / Redis / Razorpay credentials
 cp .env.example .env
 
 # Run database migrations / seed initial data
