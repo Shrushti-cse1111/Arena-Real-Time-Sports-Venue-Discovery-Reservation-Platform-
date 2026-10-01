@@ -1,0 +1,56 @@
+# Node / Web dependencies & build
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+.pub-cache/
+build/
+
+# Android
+.gradle/
+**/android/.gradle/
+**/android/captures/
+**/android/defaultConfig/
+**/android/local.properties
+**/android/**/build/
+**/android/app/build/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Editor / IDE artifacts
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
